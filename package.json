@@ -1,0 +1,12 @@
+{
+  "name": "web-push-notifications",
+  "version": "1.0.0",
+  "description": "Web Push Notifications experiments inspired by the Deep Dive into Web Push Notifications course by Harit Himanshu on Pluralsight",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
