@@ -8,8 +8,16 @@ const client = (() => {
   };
 
   const showNotification = () => {
+    const options = {
+      body: 'This is an important body!',
+      actions: [
+        {action: 'search', title: 'Try Searching!'},
+        {action: 'close', title: 'Forget it!'},
+      ]
+    };
+
     navigator.serviceWorker.getRegistration()
-      .then(registration => registration.showNotification('My First Notification'));
+      .then(registration => registration.showNotification('My First Notification', options));
   };
 
   const checkNotificationSupport = () => {
