@@ -13,7 +13,10 @@ const client = (() => {
       actions: [
         {action: 'search', title: 'Try Searching!'},
         {action: 'close', title: 'Forget it!'},
-      ]
+      ],
+      data: {
+        githubUser: 'agmo'
+      }
     };
 
     navigator.serviceWorker.getRegistration()
