@@ -22,7 +22,14 @@ const client = (() => {
       });
   }
 
+  const requestNotificationPermissions = () => {
+    return Notification.requestPermission(status => {
+      console.log('Notification Permission Status:', status);
+    });
+  }
+
   checkNotificationSupport()
     .then(registerServiceWorker)
+    .then(requestNotificationPermissions)
     .catch(err => console.error(err))
 })();
