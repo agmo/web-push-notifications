@@ -1,5 +1,16 @@
 const client = (() => {
   let serviceWorkerRegObj;
+  const notificationButton = document.getElementById('btn-notify');
+
+  const showNotificationButton = () => {
+    notificationButton.style.display = 'inline-block';
+    notificationButton.addEventListener('click', showNotification);
+  };
+
+  const showNotification = () => {
+    navigator.serviceWorker.getRegistration()
+      .then(registration => registration.showNotification('My First Notification'));
+  };
 
   const checkNotificationSupport = () => {
     if(!('Notification' in window)) {
@@ -8,7 +19,7 @@ const client = (() => {
 
     console.log("The browser supports notifications!")
     return Promise.resolve();
-  }
+  };
 
   const registerServiceWorker = () => {
     if(!('serviceWorker') in navigator) {
@@ -19,14 +30,15 @@ const client = (() => {
       .then(regObj => {
         console.log('Service worker is registered successfully!');
         serviceWorkerRegObj = regObj;
+        showNotificationButton();
       });
-  }
+  };
 
   const requestNotificationPermissions = () => {
     return Notification.requestPermission(status => {
       console.log('Notification Permission Status:', status);
     });
-  }
+  };
 
   checkNotificationSupport()
     .then(registerServiceWorker)
