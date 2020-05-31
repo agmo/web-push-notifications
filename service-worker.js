@@ -12,3 +12,14 @@ self.addEventListener('notificationclick', event => {
     console.log('notification closed');
   }
 });
+
+self.addEventListener('push', event => {
+  const data = event.data.text();
+  const options = {
+    body: data
+  };
+
+  event.waitUntil(
+    self.registration.showNotification('Server Push', options)
+  );
+});
