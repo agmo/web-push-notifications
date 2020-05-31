@@ -12,4 +12,5 @@ Experimenting with the Notifications API and the Web Push API
     npm start
     ```
 
-1. Browse to http://localhost:3000/`
+1. Browse to http://localhost:8000/
+
