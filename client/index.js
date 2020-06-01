@@ -94,6 +94,16 @@ const client = (() => {
       return outputArray;
     }
 
+    const subscribeWithServer = (subscription) => {
+      return fetch('http://localhost:3000/addSubscriber', {
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    };
+
     const subscribeUser = () => {
       const appServerPublicKey = 'BEyvjYWb29Aww8_aSq5q2qvceZwnAvvGD6uDMlOfRJCMjhxM5zZFBGZslOkl7VfwQ6MDXAyVg8SdCpixyczbqxo';
       const publicKeyAsArray = urlB64ToUint8Array(appServerPublicKey);
@@ -104,10 +114,21 @@ const client = (() => {
       })
         .then(subscription => {
           console.log(JSON.stringify(subscription, null, 4));
+          subscribeWithServer(subscription);
           disablePushNotificationButton();
         })
         .catch(error => console.error('Failed to subscribe to Push Service.', error));
-    }
+    };
+
+    const unsubscribeWithServer = (id) => {
+      return fetch('http://localhost:3000/removeSubscriber', {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    };
 
     const unSubscribeUser = () => {
       console.log('unsubscribing user');
@@ -115,6 +136,10 @@ const client = (() => {
       serviceWorkerRegObj.pushManager.getSubscription()
         .then(subscription => {
           if (subscription) {
+            let subAsString = JSON.stringify(subscription);
+            let subAsObject = JSON.parse(subAsString);
+            unsubscribeWithServer(subAsObject.keys.auth);
+
             return subscription.unsubscribe();
           }
         })
