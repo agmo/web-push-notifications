@@ -9,6 +9,10 @@ const client = (() => {
     notificationButton.addEventListener('click', showNotification);
   };
 
+  const showPushButton = () => {
+    pushButton.style.display = 'inline-block';
+  };
+
   const showNotification = () => {
     const options = {
       body: 'This is an important body!',
@@ -43,7 +47,15 @@ const client = (() => {
       .then(regObj => {
         console.log('Service worker is registered successfully!');
         serviceWorkerRegObj = regObj;
+
+        if (!serviceWorkerRegObj.pushManager) {
+          alert('Sorry, this browser is not supported.');
+
+          return;
+        }
+
         showNotificationButton();
+        showPushButton();
 
         serviceWorkerRegObj.pushManager.getSubscription()
           .then(subscription => {
