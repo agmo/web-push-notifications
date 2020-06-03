@@ -2,7 +2,12 @@ const client = (() => {
   let serviceWorkerRegObj;
   const notificationButton = document.getElementById('btn-notify');
   const pushButton = document.getElementById('btn-push');
+  const notificationContainer = document.getElementById('push-notification');
   let isUserSubscribed = false;
+
+  const notifyInApp = (message) => {
+    notificationContainer.innerText = message;
+  };
 
   const showNotificationButton = () => {
     notificationButton.style.display = 'inline-block';
@@ -66,7 +71,9 @@ const client = (() => {
             } else {
               enablePushNotificationButton();
             }
-          })
+          });
+
+        navigator.serviceWorker.addEventListener('message', event => notifyInApp(event.data))
       });
   };
 

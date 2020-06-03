@@ -16,6 +16,7 @@ self.addEventListener('notificationclick', event => {
     .then(notifications => notifications.forEach(notification => notification.close()));
 });
 
+let counter = 0;
 self.addEventListener('push', event => {
   const data = event.data.text();
   const options = {
@@ -23,6 +24,18 @@ self.addEventListener('push', event => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('Server Push', options)
+    self.clients.matchAll()
+      .then(clientList => {
+        console.log(clientList);
+        if (isTabOutOfFocus(clientList)) {
+          self.registration.showNotification('Server Push', options);
+        } else {
+          clientList[0].postMessage(`Server Push #${counter++}`);
+        }
+      })
   );
 });
+
+function isTabOutOfFocus(clients) {
+  return clients.length === 0;
+}
