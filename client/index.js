@@ -13,9 +13,11 @@ const client = (() => {
     pushButton.style.display = 'inline-block';
   };
 
+  let counter = 0;
   const showNotification = () => {
     const options = {
       body: 'This is an important body!',
+      tag: "group1",
       actions: [
         {action: 'search', title: 'Try Searching!'},
         {action: 'close', title: 'Forget it!'},
@@ -26,7 +28,7 @@ const client = (() => {
     };
 
     navigator.serviceWorker.getRegistration()
-      .then(registration => registration.showNotification('My First Notification', options));
+      .then(registration => registration.showNotification(`Notification #${counter++}`, options));
   };
 
   const checkNotificationSupport = () => {
