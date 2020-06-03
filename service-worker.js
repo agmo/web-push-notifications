@@ -11,6 +11,9 @@ self.addEventListener('notificationclick', event => {
   } else if (event.action === 'close') {
     console.log('notification closed');
   }
+
+  self.registration.getNotifications()
+    .then(notifications => notifications.forEach(notification => notification.close()));
 });
 
 self.addEventListener('push', event => {
