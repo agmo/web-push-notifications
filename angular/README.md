@@ -9,7 +9,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 1. Serve with [http-server](https://www.npmjs.com/package/http-server):
 
     ```
-   cd angular-pwa/
+   cd dist/angular-pwa/
    http-server -p 8080 -c-1 .
    ```
     or
