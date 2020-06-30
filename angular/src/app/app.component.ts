@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -6,15 +7,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  isServiceWorkerEnabled = false;
+  permissionStatus: NotificationPermission;
   title = 'angular-pwa';
 
+  constructor(private swPush: SwPush) {
+  }
+
   ngOnInit(): void {
+    this.isServiceWorkerEnabled = this.swPush.isEnabled;
     this.requestNotificationPermissions();
   }
 
   requestNotificationPermissions = () => {
-    Notification.requestPermission(status => {
-      console.log('Notification Permission Status:', status);
-    });
+    Notification.requestPermission()
+      .then(status => this.permissionStatus = status);
+  }
+
+  showNotification = () => {
+    navigator.serviceWorker.getRegistration()
+      .then(registration => registration.showNotification('My First Notification'));
   }
 }
