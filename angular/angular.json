@@ -26,7 +26,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              {
+                "glob": "**/web-push-notifications-worker.js",
+                "input": "src/custom_service_worker",
+                "output": "/"
+              }
             ],
             "styles": [
               "src/styles.scss"
