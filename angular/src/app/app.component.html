@@ -337,9 +337,20 @@
     </svg>
 
   </div>
+<!--  This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.-->
+<!--  <div *ngIf="isServiceWorkerEnabled && permissionStatus === 'granted'">-->
+<!--    <button (click)="showNotification()">SEND NOTIFICATION</button>-->
+<!--  </div>-->
 
-  <div *ngIf="isServiceWorkerEnabled && permissionStatus === 'granted'">
-    <button (click)="showNotification()">SEND NOTIFICATION</button>
+  <div *ngIf="isServiceWorkerEnabled">
+    <button (click)="enablePushNotifications()" *ngIf="!subscribed; else unsubscribeBtn">
+      ENABLE PUSH NOTIFICATIONS
+    </button>
+    <ng-template #unsubscribeBtn>
+      <button (click)="disablePushNotifications()">
+        DISABLE PUSH NOTIFICATIONS
+      </button>
+    </ng-template>
   </div>
 
   <!-- Resources -->

@@ -8,35 +8,59 @@ import { SwPush } from '@angular/service-worker';
 })
 export class AppComponent implements OnInit {
   isServiceWorkerEnabled = false;
-  permissionStatus: NotificationPermission;
+  subscribed = false;
   title = 'angular-pwa';
+
+  // This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.
+  // permissionStatus: NotificationPermission;
 
   constructor(private swPush: SwPush) {
   }
 
   ngOnInit(): void {
     this.isServiceWorkerEnabled = this.swPush.isEnabled;
-    this.requestNotificationPermissions();
+    this.swPush.subscription
+      .subscribe(subscription => {
+        console.log('Is there a subscription?', subscription);
+        this.subscribed = !!subscription;
+      });
+    // This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.
+    // this.requestNotificationPermissions();
   }
 
-  requestNotificationPermissions = () => {
-    Notification.requestPermission()
-      .then(status => this.permissionStatus = status);
+  disablePushNotifications() {
+    this.swPush.unsubscribe()
+      .then(() => console.log('Unsubscribed'))
+      .catch(error => console.error('Failed to unsubscribe from Push Service.', error));
   }
 
-  showNotification = () => {
-    const options = {
-      body: 'This is an important body!',
-      actions: [
-        {action: 'search', title: 'Try Searching!'},
-        {action: 'close', title: 'Forget it!'},
-      ],
-      data: {
-        githubUser: 'agmo'
-      }
-    };
+  enablePushNotifications() {
+    const appServerPublicKey = 'BEyvjYWb29Aww8_aSq5q2qvceZwnAvvGD6uDMlOfRJCMjhxM5zZFBGZslOkl7VfwQ6MDXAyVg8SdCpixyczbqxo';
 
-    navigator.serviceWorker.getRegistration()
-      .then(registration => registration.showNotification('My First Notification', options));
+    this.swPush.requestSubscription({serverPublicKey: appServerPublicKey})
+      .then(subscription => console.log(JSON.stringify(subscription, null, 4)))
+      .catch(error => console.error('Failed to subscribe to Push Service.', error));
   }
+
+  // These were used for sending local, i.e. non-web-push, notifications via Angular's service worker.
+  // requestNotificationPermissions = () => {
+  //   Notification.requestPermission()
+  //     .then(status => this.permissionStatus = status);
+  // }
+  //
+  // showNotification = () => {
+  //   const options = {
+  //     body: 'This is an important body!',
+  //     actions: [
+  //       {action: 'search', title: 'Try Searching!'},
+  //       {action: 'close', title: 'Forget it!'},
+  //     ],
+  //     data: {
+  //       githubUser: 'agmo'
+  //     }
+  //   };
+  //
+  //   navigator.serviceWorker.getRegistration()
+  //     .then(registration => registration.showNotification('My First Notification', options));
+  // }
 }
