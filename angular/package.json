@@ -20,8 +20,11 @@
     "@angular/platform-browser-dynamic": "~10.0.0",
     "@angular/router": "~10.0.0",
     "@angular/service-worker": "~10.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
+    "web-push": "^3.4.4",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
+import { SubscriberService } from './subscriber.service';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,13 @@ import { SwPush } from '@angular/service-worker';
 export class AppComponent implements OnInit {
   isServiceWorkerEnabled = false;
   subscribed = false;
+  subscriberId: string;
   title = 'angular-pwa';
 
   // This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.
   // permissionStatus: NotificationPermission;
 
-  constructor(private swPush: SwPush) {
+  constructor(private swPush: SwPush, private subscriberService: SubscriberService) {
   }
 
   ngOnInit(): void {
@@ -30,7 +32,10 @@ export class AppComponent implements OnInit {
 
   disablePushNotifications() {
     this.swPush.unsubscribe()
-      .then(() => console.log('Unsubscribed'))
+      .then(() => {
+        console.log('Unsubscribed')
+        this.subscriberService.removeSubscriber(this.subscriberId).subscribe();
+      })
       .catch(error => console.error('Failed to unsubscribe from Push Service.', error));
   }
 
@@ -38,7 +43,13 @@ export class AppComponent implements OnInit {
     const appServerPublicKey = 'BEyvjYWb29Aww8_aSq5q2qvceZwnAvvGD6uDMlOfRJCMjhxM5zZFBGZslOkl7VfwQ6MDXAyVg8SdCpixyczbqxo';
 
     this.swPush.requestSubscription({serverPublicKey: appServerPublicKey})
-      .then(subscription => console.log(JSON.stringify(subscription, null, 4)))
+      .then(subscription => {
+        console.log(JSON.stringify(subscription, null, 4));
+        this.subscriberService.addSubscriber(subscription)
+          .subscribe(() => {
+            this.subscriberId = subscription.toJSON().keys.auth;
+          });
+      })
       .catch(error => console.error('Failed to subscribe to Push Service.', error));
   }
 
