@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SwPush } from '@angular/service-worker';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 import { SubscriberService } from './subscriber.service';
 
 @Component({
@@ -16,7 +16,9 @@ export class AppComponent implements OnInit {
   // This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.
   // permissionStatus: NotificationPermission;
 
-  constructor(private swPush: SwPush, private subscriberService: SubscriberService) {
+  constructor(private swPush: SwPush,
+              private subscriberService: SubscriberService,
+              private swUpdate: SwUpdate) {
   }
 
   ngOnInit(): void {
@@ -28,6 +30,8 @@ export class AppComponent implements OnInit {
       });
     // This was used for sending local, i.e. non-web-push, notifications via Angular's service worker.
     // this.requestNotificationPermissions();
+
+    this.setUpUpdateActivation();
   }
 
   disablePushNotifications() {
@@ -74,4 +78,14 @@ export class AppComponent implements OnInit {
   //   navigator.serviceWorker.getRegistration()
   //     .then(registration => registration.showNotification('My First Notification', options));
   // }
+
+  private setUpUpdateActivation() {
+    this.swUpdate.available.subscribe(event => {
+      console.log(event);
+
+      if (confirm('A new versions is available. Reload now?')) {
+        this.swUpdate.activateUpdate().then(() => document.location.reload());
+      }
+    });
+  }
 }

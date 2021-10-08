@@ -18,7 +18,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     http-server -p 8080 -c-1 dist/angular-pwa
     ```
 
-1. Navigate to `http://localhost:8080/`.
+1. Navigate to `http://localhost:8080/` in an incognito window.
 
 1. Start the server that keeps track of subscribers:
 
