@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { SubscriberService } from './subscriber.service';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { SubscriberService } from './subscriber.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  isOnline = navigator.onLine;
   isServiceWorkerEnabled = false;
   subscribed = false;
   subscriberId: string;
@@ -32,6 +34,7 @@ export class AppComponent implements OnInit {
     // this.requestNotificationPermissions();
 
     this.setUpUpdateActivation();
+    this.monitorStatus();
   }
 
   disablePushNotifications() {
@@ -87,5 +90,10 @@ export class AppComponent implements OnInit {
         this.swUpdate.activateUpdate().then(() => document.location.reload());
       }
     });
+  }
+
+  private monitorStatus() {
+    fromEvent(window, 'online').subscribe(() => this.isOnline = true);
+    fromEvent(window, 'offline').subscribe(() => this.isOnline = false);
   }
 }
